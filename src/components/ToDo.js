@@ -1,17 +1,31 @@
 import React from 'react';
 import {Row, Container, Card, Col} from 'react-bootstrap';
+import axios from "axios";
 class TodoList extends React.Component {
+    state = {
+        tasks: [],
+        errorMessage: ''
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    //retrieve data from axios mock-database
+    getData() {
+        axios.get('http://my-json-server.typicode.com/bnissen24/project2DB/posts')
+            .then(response => {
+                //makes list
+                this.setState({ tasks: response.data });
+            }).catch(error => {
+            this.setState({ errorMessage: error.message });
+        });
+    }
 
     render() {
-
         return (
+
             <div>
-            <head>
-                <link rel="stylesheet"
-                      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-                      integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
-                      crossOrigin="anonymous"/>
-            </head>
 
         <Container fluid>
                 <h1>Hello World</h1>
@@ -22,14 +36,41 @@ class TodoList extends React.Component {
                 <hr/>
             <Container>
                 <Row>
-                    <Col>1 of 3</Col>
-                    <Col>2 of 3</Col>
-                    <Col>3 of 3</Col>
-                    <Col>3 of 3</Col>
+                    <Col><h3>To Do</h3>
+                        {
+                            this.state.tasks.map(tasks => <p key={tasks.id}>{tasks.title} : { tasks.column}</p>)
+                        }
+                    </Col>
+                    <Col><h3>In-progress</h3>
+                            {
+                                this.state.tasks
+                                    .map(tasks =>
+                                        <p key={tasks.id}>{tasks.title} : { tasks.column}</p>)
+                            }
+                    </Col>
+
+
+                    { console.log(this.state.tasks[1]) }
+
+
+
+                    <Col><h3>Review</h3> {
+
+                        this.state.tasks
+                            .map(tasks =>
+                                <p key={tasks.id}>{tasks.title} : { tasks.column}</p>)
+                    }</Col>
+                    <Col><h3>Done</h3> {
+                        this.state.tasks
+
+                            .map(tasks =>
+                                <p key={tasks.id}>{tasks.title} : { tasks.column}</p>)
+                    }</Col>
                 </Row>
             </Container>
         </Container>
             </div>
+
         );
     }
 }
